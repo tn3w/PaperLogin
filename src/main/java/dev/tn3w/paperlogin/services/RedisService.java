@@ -1,4 +1,4 @@
-package com.example.paperlogin.services;
+package dev.tn3w.paperlogin.services;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

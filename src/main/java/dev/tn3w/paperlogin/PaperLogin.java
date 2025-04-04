@@ -1,10 +1,10 @@
-package com.example.paperlogin;
+package dev.tn3w.paperlogin;
 
-import com.example.paperlogin.commands.LoginCommand;
-import com.example.paperlogin.commands.VerifyCommand;
-import com.example.paperlogin.config.ConfigManager;
-import com.example.paperlogin.services.AuthenticationService;
-import com.example.paperlogin.services.RedisService;
+import dev.tn3w.paperlogin.commands.LoginCommand;
+import dev.tn3w.paperlogin.commands.VerifyCommand;
+import dev.tn3w.paperlogin.config.ConfigManager;
+import dev.tn3w.paperlogin.services.AuthenticationService;
+import dev.tn3w.paperlogin.services.RedisService;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PaperLogin extends JavaPlugin {

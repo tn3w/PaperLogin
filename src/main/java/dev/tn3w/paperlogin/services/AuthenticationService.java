@@ -1,6 +1,6 @@
-package com.example.paperlogin.services;
+package dev.tn3w.paperlogin.services;
 
-import com.example.paperlogin.config.ConfigManager;
+import dev.tn3w.paperlogin.config.ConfigManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 

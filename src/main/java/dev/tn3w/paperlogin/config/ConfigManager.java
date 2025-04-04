@@ -1,4 +1,4 @@
-package com.example.paperlogin.config;
+package dev.tn3w.paperlogin.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;

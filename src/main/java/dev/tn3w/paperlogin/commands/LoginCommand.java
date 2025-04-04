@@ -1,6 +1,6 @@
-package com.example.paperlogin.commands;
+package dev.tn3w.paperlogin.commands;
 
-import com.example.paperlogin.services.AuthenticationService;
+import dev.tn3w.paperlogin.services.AuthenticationService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
