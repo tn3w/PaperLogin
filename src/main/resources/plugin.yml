@@ -1,0 +1,22 @@
+name: PaperLogin
+version: '1.0'
+main: dev.tn3w.paperlogin.PaperLogin
+api-version: '1.21'
+description: Authentication plugin for website login with Minecraft accounts
+authors: [TN3W]
+libraries:
+  - redis.clients:jedis:5.2.0
+commands:
+  login:
+    description: Generate a login code for website login
+    usage: /login
+  verify:
+    description: Verify login from website
+    usage: /verify <code>
+permissions:
+  paperlogin.login:
+    description: Allows player to use login command
+    default: true
+  paperlogin.verify:
+    description: Allows player to use verify command
+    default: true 

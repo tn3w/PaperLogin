@@ -1,0 +1,18 @@
+# Basic configuration for the PaperLogin plugin
+redis:
+  host: 'localhost'
+  port: 6379
+  password: ''
+  # Set to true to use password
+  auth-enabled: false
+  
+# Authentication Settings
+auth:
+  # Length of the generated login code
+  login-code-length: 9
+  # How long (in seconds) a login code remains valid
+  login-code-validity: 300
+  # How long (in seconds) a web verification code remains valid
+  web-code-validity: 600
+  # URL pattern for website login (set to empty string to disable)
+  website-url: 'https://example.com/login/{code}'
