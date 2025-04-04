@@ -22,7 +22,7 @@ A Minecraft Paper plugin that allows players to authenticate with a website usin
    ```bash
    ./gradlew clean jar --no-daemon
    ```
-3. Copy the built JAR (`build/libs/PaperLogin<VERSION>.jar`) to your server's `plugins` folder
+3. Copy the built JAR (`build/libs/PaperLogin-<VERSION>.jar`) to your server's `plugins` folder
 4. Start the server
 5. Configure the plugin by editing `plugins/PaperLogin/config.yml`
 
