@@ -38,13 +38,13 @@ public class AuthenticationService {
         String existingCode = findExistingLoginCodeForPlayer(player);
         if (existingCode != null) {
             // If code exists, reset its expiry and return it
-            String key = LOGIN_KEY_PREFIX + existingCode;
+            String key = LOGIN_KEY_PREFIX + existingCode.toUpperCase();
             redisService.expire(key, configManager.getLoginCodeValiditySeconds());
-            return existingCode;
+            return existingCode.toUpperCase();
         }
         
         // Generate a new code if no existing one was found
-        String code = generateRandomCode(configManager.getLoginCodeLength());
+        String code = generateRandomCode(configManager.getLoginCodeLength()).toUpperCase();
         String key = LOGIN_KEY_PREFIX + code;
         
         // Create a map of user info to store in Redis
