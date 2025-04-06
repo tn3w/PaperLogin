@@ -192,15 +192,33 @@ public class AuthenticationService {
         String key = WEB_KEY_PREFIX + code;
         
         try {
-            // Create a map of user info to store in Redis if not already present
+            // Check if the code exists
+            if (!redisService.exists(key)) {
+                return false;
+            }
+            
+            // Check for identifier (from web verification)
+            String identifier = redisService.hget(key, "identifier");
             String existingUuid = redisService.hget(key, "uuid");
-            boolean shouldStoreInfo = existingUuid == null || !existingUuid.equals(player.getUniqueId().toString());
+            
+            // Update user info if:
+            // 1. An identifier exists (coming from web verification)
+            // 2. No UUID exists yet
+            // 3. UUID doesn't match player's UUID
+            boolean shouldStoreInfo = identifier != null || 
+                                      existingUuid == null || 
+                                      !existingUuid.equals(player.getUniqueId().toString());
             
             if (shouldStoreInfo) {
                 Map<String, String> userInfo = new HashMap<>();
                 userInfo.put("uuid", player.getUniqueId().toString());
                 userInfo.put("username", player.getName());
                 userInfo.put("isOp", String.valueOf(player.isOp()));
+                
+                // Keep the identifier if it exists
+                if (identifier != null) {
+                    userInfo.put("identifier", identifier);
+                }
                 
                 // Store user info in Redis with the code as key
                 for (Map.Entry<String, String> entry : userInfo.entrySet()) {
