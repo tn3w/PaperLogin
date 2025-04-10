@@ -8,43 +8,37 @@ import dev.tn3w.paperlogin.services.RedisService;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PaperLogin extends JavaPlugin {
-    private RedisService redisService;
-    private AuthenticationService authService;
-    private ConfigManager configManager;
+  private RedisService redisService;
+  private AuthenticationService authService;
+  private ConfigManager configManager;
 
-    @Override
-    public void onEnable() {
-        // Save default config
-        saveDefaultConfig();
-        
-        // Load configuration
-        configManager = new ConfigManager(this);
-        configManager.loadConfig();
-        
-        // Initialize Redis connection
-        this.redisService = new RedisService(
+  @Override
+  public void onEnable() {
+    saveDefaultConfig();
+
+    configManager = new ConfigManager(this);
+    configManager.loadConfig();
+
+    this.redisService =
+        new RedisService(
             configManager.getRedisHost(),
             configManager.getRedisPort(),
-            configManager.getRedisPassword()
-        );
-        
-        // Initialize authentication service
-        this.authService = new AuthenticationService(redisService, this);
-        
-        // Register commands
-        getCommand("login").setExecutor(new LoginCommand(authService));
-        getCommand("verify").setExecutor(new VerifyCommand(authService));
-        
-        getLogger().info("PaperLogin has been enabled!");
+            configManager.getRedisPassword());
+
+    this.authService = new AuthenticationService(redisService, this);
+
+    getCommand("login").setExecutor(new LoginCommand(authService));
+    getCommand("verify").setExecutor(new VerifyCommand(authService));
+
+    getLogger().info("PaperLogin has been enabled!");
+  }
+
+  @Override
+  public void onDisable() {
+    if (redisService != null) {
+      redisService.shutdown();
     }
 
-    @Override
-    public void onDisable() {
-        // Close Redis connection
-        if (redisService != null) {
-            redisService.shutdown();
-        }
-        
-        getLogger().info("PaperLogin has been disabled!");
-    }
-} 
+    getLogger().info("PaperLogin has been disabled!");
+  }
+}

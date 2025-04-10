@@ -26,6 +26,14 @@ A Minecraft Paper plugin that allows players to authenticate with a website usin
 4. Start the server
 5. Configure the plugin by editing `plugins/PaperLogin/config.yml`
 
+## Formatting
+
+1. Download the latest Google Java formatter jar from the [releases page](https://github.com/google/google-java-format/releases/latest)
+2. Format all Java files:
+   ```bash
+   find src -name "*.java" | xargs java -jar google-java-format.jar --replace
+   ```
+
 ### Install redis
 1. Add Redis Labs repository using apt
    ```bash
