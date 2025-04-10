@@ -22,13 +22,11 @@ public class ConfigManager {
     plugin.saveDefaultConfig();
     FileConfiguration config = plugin.getConfig();
 
-    // Load Redis configuration
     this.redisHost = config.getString("redis.host", "localhost");
     this.redisPort = config.getInt("redis.port", 6379);
     this.redisPassword = config.getString("redis.password", "");
     this.redisAuthEnabled = config.getBoolean("redis.auth-enabled", false);
 
-    // Load authentication settings
     this.loginCodeLength = config.getInt("auth.login-code-length", 9);
     this.loginCodeValiditySeconds = config.getInt("auth.login-code-validity", 300);
     this.webCodeValiditySeconds = config.getInt("auth.web-code-validity", 600);
