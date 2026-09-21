@@ -24,3 +24,4 @@ gradle-app.setting
 google-java-format.jar
 
 bin/
+run/
