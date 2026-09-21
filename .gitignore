@@ -22,3 +22,5 @@ gradle-app.setting
 
 # Google Java formatter
 google-java-format.jar
+
+bin/
