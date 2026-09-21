@@ -1,122 +1,63 @@
 # PaperLogin
 
-A Minecraft Paper plugin that allows players to authenticate with a website using their Minecraft account.
+Paper plugin that lets players log in to your website with their Minecraft account.
+Codes are exchanged through Redis, so the website only needs a Redis client.
 
-## Features
+Requires Paper 1.21.3+ (Java 21) and Redis. Jedis is downloaded by Paper at startup.
 
-- Two-way authentication between Minecraft and a website
-- Redis-based storage for authentication data
-- Login code generation for secure authentication
-- Web verification commands for website-initiated authentication
+## Build
 
-## Requirements
+```bash
+./gradlew build          # build/libs/PaperLogin-<version>.jar
+./gradlew runServer      # local test server
+```
 
-- Paper Minecraft server (version 1.21.3)
-- Java 17 or higher
-- Redis server
+Copy the jar into `plugins/` and edit `plugins/PaperLogin/config.yml`.
 
-## Setup
+## Flows
 
-1. Clone this repository
-2. Build the plugin with Gradle:
-   ```bash
-   ./gradlew clean jar --no-daemon
-   ```
-3. Copy the built JAR (`build/libs/PaperLogin-<VERSION>.jar`) to your server's `plugins` folder
-4. Start the server
-5. Configure the plugin by editing `plugins/PaperLogin/config.yml`
+**Player-initiated:** `/login` shows a code (and a clickable link if `website-url` is
+set). The website looks up `paperlogin:code:<CODE>`. Running `/login` again returns the
+same code and extends it.
 
-### Install redis
-1. Add Redis Labs repository using apt
-   ```bash
-   sudo add-apt-repository ppa:redislabs/redis -y
-   ```
-2. Update package index
-   ```bash
-   sudo apt update
-   ```
-3. Install Redis server
-   ```bash
-   sudo apt install redis-server -y
-   ```
-4. Enable and start Redis server
-   ```bash
-   sudo systemctl enable redis-server
-   sudo systemctl start redis-server
-   ```
+**Website-initiated:** the website creates hash `paperlogin:web:<code>` (any fields,
+e.g. `identifier`) and shows the code. The player runs `/verify <code>`; the plugin adds
+the player's info. A code claimed by one player cannot be claimed by another.
 
-## Formatting
+Redis work runs off the main thread; if Redis is down players get an error message.
 
-1. Download the latest Google Java formatter jar from the [releases page](https://github.com/google/google-java-format/releases/latest)
-2. Format all Java files:
-   ```bash
-   find src -name "*.java" | xargs java -jar google-java-format.jar --aosp --replace
-   ```
+## Redis keys
 
-## Configuration
+| Key | Type | Content | TTL |
+| --- | --- | --- | --- |
+| `paperlogin:code:<CODE>` | hash | `uuid`, `username`, `isOp` | `login-code-validity` |
+| `paperlogin:player:<uuid>` | string | current login code | `login-code-validity` |
+| `paperlogin:web:<code>` | hash | website fields + `uuid`, `username`, `isOp` | `web-code-validity` |
+
+Login codes use `A-Z` and `2-9` without look-alike characters (`I`, `O`, `0`, `1`).
+
+## Config
 
 ```yaml
-# Basic configuration for the PaperLogin plugin
 redis:
-  host: 'localhost'
+  host: localhost
   port: 6379
-  password: ''
-  # Set to true to use password
-  auth-enabled: false
-  
-# Authentication Settings
+  password: ''          # empty = no auth
+
 auth:
-  # Length of the generated login code
   login-code-length: 9
-  # How long (in seconds) a login code remains valid
-  login-code-validity: 300
-  # How long (in seconds) a web verification code remains valid
-  web-code-validity: 600
-  # URL pattern for website login (set to empty string to disable)
-  website-url: 'https://example.com/login/{code}'
+  login-code-validity: 300   # seconds
+  web-code-validity: 600     # seconds
+  website-url: 'https://example.com/login/{code}'   # empty = no link
 ```
 
 ## Commands
 
-### For Players
-
-- `/login` - Generates a login code that can be used on the website to authenticate
-- `/verify <code>` - Verifies a code from the website to complete authentication
-
-### Permissions
-
-- `paperlogin.login` - Allows using the `/login` command (default: true)
-- `paperlogin.verify` - Allows using the `/verify` command (default: true)
-
-## Redis Data Structure
-
-The plugin uses the following Redis key formats:
-
-- `paperlogin:code:<player_uuid>` - Stores login verification codes
-- `paperlogin:web:<code>` - Stores web verification codes
-
-## Website Integration
-
-To integrate with your website, you'll need to:
-
-1. Connect to the same Redis instance
-2. Read authentication data from Redis
-3. Implement both:
-   - Code verification for player-initiated login
-   - Verification code generation for website-initiated login
+| Command | Permission (default: everyone) |
+| --- | --- |
+| `/login` | `paperlogin.login` |
+| `/verify <code>` | `paperlogin.verify` |
 
 ## License
 
-Copyright 2025 TN3w
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+[Apache-2.0](LICENSE)
